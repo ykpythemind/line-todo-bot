@@ -21,16 +21,23 @@ class ReplyHandler
   private
 
   def task_done
-    task = Task.find_by(id: message.strip.to_i)
-    if task.present?
-      s = task.text
-      task.destroy
+    raw = message.strip
+    ids = if raw.include?(",")
+            raw.split(',')
+          else
+            [raw.to_i]
+          end
+    tasks = Task.where(id: ids).all
+    if tasks.present?
+      s = tasks.all.map(&:text).join(", ")
+      Task.destroy(ids)
       reply.add "#{s} をやったぞ"
     end
   end
 
   def add_to_db
-    Task.create(text: message)
+    new_task = message.strip
+    Task.create(text: new_task) if new_task.present?
   end
 
   def reply_all_task
