@@ -14,6 +14,7 @@ MESSAGE
   end
 
   def detect!
+    # TODO: 正規表現などで置き換えたい
     if message.include? "タスク追加"
       @message.remove! "タスク追加"
       add_to_db
