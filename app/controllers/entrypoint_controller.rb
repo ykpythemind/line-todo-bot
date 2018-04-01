@@ -2,6 +2,7 @@ require 'line/bot'
 
 class EntrypointController < ApplicationController
   def index
+    reply = Reply.new
     body = request.body.read
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']
@@ -21,14 +22,13 @@ class EntrypointController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          message = {
-            type: 'text',
-            text: event.message['text']
-          }
-          client.reply_message(event['replyToken'], message)
+          reply.token = event['replyToken']
+          ReplyHandler.new(event.message['text'], reply).detect!
         end
       end
     }
+
+    client.reply_message(reply.token, reply.content) if reply.need_to_reply?
 
     head :ok
   end
