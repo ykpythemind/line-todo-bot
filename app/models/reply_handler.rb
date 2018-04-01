@@ -39,7 +39,7 @@ MESSAGE
           end
     tasks = Task.where(id: ids).all
     if tasks.present?
-      s = tasks.all.map(&:text).join(", ")
+      s = tasks.pluck(:text).join(", ")
       Task.destroy(ids)
       reply.add "#{s} をやったぞ"
     end

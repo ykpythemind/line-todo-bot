@@ -12,7 +12,7 @@ class EntrypointController < ApplicationController
 
     events = client.parse_events_from(body)
 
-    events.each { |event|
+    events.each do |event|
       # binding.pry
       type = event["source"]["type"]
       break unless type == "group"
@@ -26,7 +26,7 @@ class EntrypointController < ApplicationController
           ReplyHandler.new(event.message['text'], reply).detect!
         end
       end
-    }
+    end
 
     client.reply_message(reply.token, reply.content) if reply.need_to_reply?
 
