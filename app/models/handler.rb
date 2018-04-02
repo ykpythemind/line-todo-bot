@@ -11,7 +11,7 @@ class Handler
     client.reply_message(token, reply.content) if reply.need_to_reply?
   end
 
-  def detect!
+  def perform!
     Message.detect!(message) do |type|
       case type
       when :add
