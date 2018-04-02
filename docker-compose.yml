@@ -16,7 +16,6 @@ services:
       - db_bot
     environment:
       LINEBOT_DATABASE_USERNAME: postgres
-      SECRET_KEY_BASE: 4035bb0fcfd5485431342bd7b33600a20724e6b7d428186948ee6d241e565e7adeb1aff6ced3379fcf1f27154e89a5956332f2908597712a874ea142a76b068d
       VIRTUAL_HOST: line.nkwors.com
       VIRTUAL_PORT: 3022
       LETSENCRYPT_HOST: line.nkwors.com
