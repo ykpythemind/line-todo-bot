@@ -16,8 +16,7 @@ class EntrypointController < ApplicationController
       # binding.pry
       type = event["source"]["type"]
       break unless type == "group"
-      group_id = event["source"]["groupId"]
-      break unless group_id == "C535046c0a45dd2afbdd42393e27795ab" || group_id == "C48c94a985f87a47e68bbc06af9b68e28" # me, nk # TODO: avoid hard coding
+      break unless permitted_group? event["source"]["groupId"]
       case event
       when Line::Bot::Event::Message
         case event.type
@@ -40,5 +39,12 @@ class EntrypointController < ApplicationController
       config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
       config.channel_token  = ENV["LINE_CHANNEL_TOKEN"]
     }
+  end
+
+  PERMITTED_GROUP_ID = ENV.fetch('PERMITTED_GROUP_ID', []).split(',')
+
+  def permitted_group?(group_id)
+    return true if PERMITTED_GROUP_ID.blank?
+    PERMITTED_GROUP_ID.include? group_id
   end
 end
