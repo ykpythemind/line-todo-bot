@@ -13,6 +13,8 @@ class Message
       result = :usage
     elsif msg.include?('タスク') || msg.upcase.include?("TASK")
       result = :all
+    elsif msg.include? 'version'
+      result = :version
     end
     yield result if block_given? && result
     result

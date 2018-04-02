@@ -15,13 +15,15 @@ class Handler
     Message.detect!(message) do |type|
       case type
       when :add
-        insert_into_db
+        add_task
       when :done
         done_task
       when :all
         show_all_tasks
       when :usage
         show_usage
+      when :version
+        show_version
       end
     end
     self
@@ -44,7 +46,7 @@ class Handler
     end
   end
 
-  def insert_into_db
+  def add_task
     new_task = message.strip
     Task.create(text: new_task) if new_task.present?
   end
@@ -66,5 +68,9 @@ class Handler
 MESSAGE
   def show_usage
     reply.add USAGE
+  end
+
+  def show_version
+    reply.add "bot / Rails: #{Rails.version} (#{Rails.env})"
   end
 end
