@@ -26,7 +26,6 @@ class Handler
         show_version
       end
     end
-    self
   end
 
   private

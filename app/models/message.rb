@@ -1,19 +1,26 @@
 class Message
-  def self.detect!(message)
-    msg = message
+  def initialize(message)
+    @message = message
+  end
+
+  def self.detect!(message, &block)
+    new(message).detect!(&block)
+  end
+
+  def detect!
     result = nil
     # TODO: 正規表現などで置き換えたい
-    if msg.include? "タスク追加"
+    if @message.include? "タスク追加"
       result = :add
-      msg.remove! "タスク追加"
-    elsif msg.include? 'タスク完了'
+      @message.remove! "タスク追加"
+    elsif @message.include? 'タスク完了'
       result = :done
-      msg.remove! "タスク完了"
-    elsif msg.include? 'タスク使い方'
+      @message.remove! "タスク完了"
+    elsif @message.include? 'タスク使い方'
       result = :usage
-    elsif msg.include?('タスク') || msg.upcase.include?("TASK")
+    elsif @message.include?('タスク') || @message.upcase.include?("TASK")
       result = :all
-    elsif msg.include? 'version'
+    elsif @message.include? 'version'
       result = :version
     end
     yield result if block_given? && result

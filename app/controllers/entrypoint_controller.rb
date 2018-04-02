@@ -20,7 +20,8 @@ class EntrypointController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          handler = Handler.new(event.message['text']).detect!
+          handler = Handler.new(event.message['text'])
+          handler.detect!
           handler.send_reply!(client, event['replyToken'])
         end
       end
