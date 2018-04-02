@@ -1,5 +1,5 @@
-class ReplyHandler
-  attr_reader :message, :reply
+class Handler
+  attr_reader :reply
 
   HELP = <<MESSAGE
 [usage]
@@ -8,24 +8,37 @@ class ReplyHandler
 タスク完了 【ID】　完了する
 MESSAGE
 
-  def initialize(message, reply_obj)
+  def initialize(message)
     @message = message
-    @reply = reply_obj
+    @reply = Reply.new
+  end
+
+  def send_reply!(client, token)
+    client.reply_message(token, reply.content) if reply.need_to_reply?
   end
 
   def detect!
+    # reply.add 'piyo'
     # TODO: 正規表現などで置き換えたい
-    if message.include? "タスク追加"
-      @message.remove! "タスク追加"
-      add_to_db
-    elsif message.include? "タスク完了"
-      @message.remove! "タスク完了"
-      task_done
-    elsif message.include? "タスク使い方"
-      reply.add HELP
-    elsif message.include?("タスク") || message.upcase.include?("TASK")
-      reply_all_task
-    end
+    # Message.detect! do |type|
+    #   case type
+    #   when :add
+    #     add_to_db
+    #   when :done
+    #   end
+    # end
+    # if message.include? "タスク追加"
+    #   @message.remove! "タスク追加"
+    #   add_to_db
+    # elsif message.include? "タスク完了"
+    #   @message.remove! "タスク完了"
+    #   task_done
+    # elsif message.include? "タスク使い方"
+    #   reply.add HELP
+    # elsif message.include?("タスク") || message.upcase.include?("TASK")
+    #   reply_all_task
+    # end
+    self
   end
 
   private

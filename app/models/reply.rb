@@ -1,23 +1,20 @@
 class Reply
-  attr_accessor :token
-
   def initialize
-    @content = nil
-    @token = nil
+    @text = nil
   end
 
-  def add(content)
-    @content = content
+  def add(text)
+    @text = text
   end
 
   def content
     {
       type: 'text',
-      text: @content
+      text: @text
     }
   end
 
   def need_to_reply?
-    @content.present?
+    @text.present?
   end
 end
