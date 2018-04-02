@@ -80,7 +80,7 @@ test:
 #
 production:
   <<: *default
-  host: <%= ENV.fetch('LINEBOT_DATABASE_HOST'){ db } %>
+  host: <%= ENV.fetch('LINEBOT_DATABASE_HOST'){ 'db' } %>
   database: linebot_production
   username: <%= ENV['LINEBOT_DATABASE_USERNAME'] %>
   password: <%= ENV['LINEBOT_DATABASE_PASSWORD'] %>
