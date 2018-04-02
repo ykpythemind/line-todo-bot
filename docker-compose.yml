@@ -1,6 +1,6 @@
 version: '3'
 services:
-  db:
+  db_bot:
     image: postgres:10-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -13,7 +13,7 @@ services:
     ports:
       - "3022:3000"
     depends_on:
-      - db
+      - db_bot
     environment:
       LINEBOT_DATABASE_USERNAME: postgres
 
