@@ -1,20 +1,19 @@
 class Reply
   def initialize
-    @text = nil
+    @stack = []
   end
 
   def add(text)
-    @text = text
+    @stack.push text
   end
 
   def content
-    {
-      type: 'text',
-      text: @text
-    }
+    @stack.map do |s|
+      { type: 'text', text: s }
+    end
   end
 
   def need_to_reply?
-    @text.present?
+    @stack.present?
   end
 end
