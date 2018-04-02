@@ -31,3 +31,16 @@ ngrokは起動毎にアドレスが変わるので注意
 ```
 PERMITTED_GROUP_ID=hogehoge,piyopiyo
 ```
+
+
+### deploy
+
+* Docker
+* https://github.com/ykpythemind/nginx-proxy Let's encrypt (webhookに登録するアドレスはSSL通信が必要)
+
+```
+$ docker-compose build
+$ docker-compose up -d
+更新
+$ docker-compose build bot; docker-compose kill bot; docker-compose up -d
+```

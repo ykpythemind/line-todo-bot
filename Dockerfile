@@ -35,7 +35,8 @@ WORKDIR $APP_HOME
 
 # Configure production environment variables
 ENV RAILS_ENV=production \
-    RACK_ENV=production
+    RACK_ENV=production \
+    RAILS_LOG_TO_STDOUT=true
 
 EXPOSE 3000
 
