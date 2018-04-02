@@ -6,14 +6,12 @@
   - App type : BOT
   - Plan     : For Developer
 
-### .envファイルを直下に用意
+### .envファイルをプロジェクト直下に用意
 
-```
+```.env
 LINE_CHANNEL_SECRET=dummy
 LINE_CHANNEL_TOKEN=dummy
 ```
-
-## development
 
 ```
 $ bundle install
