@@ -12,7 +12,6 @@ class Message
   def detect!
     result = nil
     @message.strip!
-    # TODO: 正規表現などで置き換えたい
     if @message.match(/\A(タスク追加)/)
       result = :add
       @message.remove! $~[1]

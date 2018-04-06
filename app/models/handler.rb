@@ -48,6 +48,7 @@ class Handler
   def add_task
     new_task = message.strip
     Task.create(text: new_task) if new_task.present?
+    reply.add "追加した"
   end
 
   def show_all_tasks
@@ -60,10 +61,10 @@ class Handler
   end
 
   USAGE = <<MESSAGE
-[usage]
-タスク|task　のこりタスクを表示
-タスク追加 【文章】　追加する
-タスク完了 【ID】　完了する
+[使い方]
+1) タスク -> のこりタスクを表示 []内がID
+2) タスク追加 【文章】
+3) タスク完了 【ID】
 MESSAGE
   def show_usage
     reply.add USAGE
