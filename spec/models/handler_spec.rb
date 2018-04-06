@@ -17,17 +17,31 @@ RSpec.describe Handler, type: :model do
   end
 
   describe "タスク完了のメッセージがくるとき" do
-    let(:handler) { Handler.new("タスク完了　1") }
     let!(:task) { Task.create(id: 1, text: "とあるタスク") }
-    it "データベースから削除すること" do
-      expect {
+    context "正しくIDを指定したとき" do
+      let(:handler) { Handler.new("タスク完了　1") }
+      it "データベースから削除すること" do
+        expect {
+          handler.perform!
+        }.to change { Task.count }.by(-1)
+      end
+      it "終了したことをリプライする" do
         handler.perform!
-      }.to change { Task.count }.by(-1)
+        message = handler.reply.instance_variable_get(:@stack).join
+        expect(message).to include "とあるタスク"
+      end
     end
-    it "終了したことをリプライする" do
-      handler.perform!
-      message = handler.reply.instance_variable_get(:@stack).join
-      expect(message).to include "とあるタスク"
+
+    context "正しくないID" do
+      let(:handler) { Handler.new("タスク完了　ほげ") }
+      it "データベースから削除しない" do
+        expect { handler.perform! }.to_not change { Task.count }
+      end
+      it "ちがっていることをリプライ" do
+        handler.perform!
+        message = handler.reply.instance_variable_get(:@stack).join
+        expect(message).to include "見つけられなかった"
+      end
     end
   end
 

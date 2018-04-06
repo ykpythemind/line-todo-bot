@@ -42,6 +42,8 @@ class Handler
       s = tasks.pluck(:text).join(", ")
       Task.destroy(ids)
       reply.add "#{s} をやったぞ"
+    else
+      reply.add "そのタスク見つけられなかった… IDあってる？"
     end
   end
 
