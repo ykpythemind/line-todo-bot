@@ -31,23 +31,25 @@ class Handler
   private
 
   def done_task
-    raw = message.strip
-    ids = if raw.include?(",")
-            raw.split(',')
+    ids = if message.include?(",")
+            message.split(',')
           else
-            [raw.to_i]
+            [message.to_i]
           end
     tasks = Task.where(id: ids).all
     if tasks.present?
       s = tasks.pluck(:text).join(", ")
       Task.destroy(ids)
       reply.add "#{s} をやったぞ"
+    else
+      reply.add "そのタスク見つけられなかった… IDあってる？"
     end
   end
 
   def add_task
-    new_task = message.strip
-    Task.create(text: new_task) if new_task.present?
+    return if message.blank?
+    Task.create(text: message)
+    reply.add "追加した"
   end
 
   def show_all_tasks
@@ -60,10 +62,10 @@ class Handler
   end
 
   USAGE = <<MESSAGE
-[usage]
-タスク|task　のこりタスクを表示
-タスク追加 【文章】　追加する
-タスク完了 【ID】　完了する
+[使い方]
+1) タスク -> のこりタスクを表示 []内がID
+2) タスク追加 【文章】
+3) タスク完了 【ID】
 MESSAGE
   def show_usage
     reply.add USAGE
