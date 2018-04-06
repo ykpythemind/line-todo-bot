@@ -31,11 +31,10 @@ class Handler
   private
 
   def done_task
-    raw = message.strip
-    ids = if raw.include?(",")
-            raw.split(',')
+    ids = if message.include?(",")
+            message.split(',')
           else
-            [raw.to_i]
+            [message.to_i]
           end
     tasks = Task.where(id: ids).all
     if tasks.present?
@@ -48,8 +47,8 @@ class Handler
   end
 
   def add_task
-    new_task = message.strip
-    Task.create(text: new_task) if new_task.present?
+    return if message.blank?
+    Task.create(text: message)
     reply.add "追加した"
   end
 

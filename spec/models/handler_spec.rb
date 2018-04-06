@@ -2,17 +2,26 @@ require 'rails_helper'
 
 RSpec.describe Handler, type: :model do
   describe "タスク追加のメッセージがくるとき" do
-    let(:handler) { Handler.new("タスク追加　piyopiyo") }
-    it "データベースに追加すること" do
-      expect {
+    context "メッセージの内容が正しくあるとき" do
+      let(:handler) { Handler.new("タスク追加　piyopiyo") }
+      it "データベースに追加すること" do
+        expect {
+          handler.perform!
+        }.to change(Task, :count)
+        expect(Task.last.text).to eq "piyopiyo"
+      end
+      it "追加したことをリプライする" do
         handler.perform!
-      }.to change(Task, :count)
-      expect(Task.last.text).to eq "piyopiyo"
+        message = handler.reply.instance_variable_get(:@stack).join
+        expect(message).to include "追加した"
+      end
     end
-    it "追加したことをリプライする" do
-      handler.perform!
-      message = handler.reply.instance_variable_get(:@stack).join
-      expect(message).to include "追加した"
+
+    context "メッセージが空の時" do
+      let(:handler) { Handler.new("タスク追加") }
+      it "データベースに追加しないこと" do
+        expect { handler.perform! }.to_not change(Task, :count)
+      end
     end
   end
 
