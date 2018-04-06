@@ -1,4 +1,6 @@
 class Message
+  attr_reader :message
+
   def initialize(message)
     @message = message
   end
@@ -9,16 +11,19 @@ class Message
 
   def detect!
     result = nil
+    @message.strip!
     # TODO: 正規表現などで置き換えたい
-    if @message.include? "タスク追加"
+    if @message.match(/\A(タスク追加)/)
       result = :add
-      @message.remove! "タスク追加"
-    elsif @message.include? 'タスク完了'
+      @message.remove! $~[1]
+      @message.remove! /\s|　/
+    elsif @message.match(/\A(タスク)(完.+?|おわ.+?|終.+?)\s?/)
       result = :done
-      @message.remove! "タスク完了"
-    elsif @message.include? 'タスク使い方'
+      @message.remove! "#{$~[1]}#{$~[2]}"
+      @message.remove! /\s|　/
+    elsif @message.match(/\A(タスク(使.+?|ヘルプ|？|\?)|help)/)
       result = :usage
-    elsif @message.include?('タスク') || @message.upcase.include?("TASK")
+    elsif @message.match(/\A(タスク|task|たすく)\z/)
       result = :all
     elsif @message.include? 'version'
       result = :version
