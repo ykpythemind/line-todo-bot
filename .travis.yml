@@ -16,3 +16,6 @@ before_script:
 
 script:
   - bundle exec rspec
+
+notifications:
+  email: false
