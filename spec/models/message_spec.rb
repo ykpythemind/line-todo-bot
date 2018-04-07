@@ -2,55 +2,32 @@ require 'rails_helper'
 
 RSpec.describe Message, type: :model do
 
+  Msg = Struct.new(:text, :expected)
+
   describe "detect message" do
     subject { Message.detect!(text) }
-    describe "通常のメッセージ" do
-      let(:text) { "piyopiyo" }
-      it { is_expected.to be_nil }
-    end
-    describe "タスクメッセージ" do
-      let(:text) { "タスク" }
-      it { is_expected.to eq :all }
-    end
-    describe "先頭がタスクで始まらない" do
-      let(:text) { "テストテストテストタスクをやる" }
-      it { is_expected.to be_nil }
-    end
-    describe "なんかちがう" do
-      let(:text) { "タスクをテステス" }
-      it { is_expected.to be_nil }
-    end
-    describe "タスク追加" do
-      let(:text) { "タスク追加　ぴよぴよ" }
-      it { is_expected.to eq :add }
-    end
-    describe "タスク完了" do
-      let(:text) { "タスク完了　ぴよ" }
-      it { is_expected.to eq :done }
-    end
-    describe "タスク終" do
-      let(:text) { "タスク終了　ぴよ" }
-      it { is_expected.to eq :done }
-    end
-    describe "タスク使い方" do
-      let(:text) { "タスク使い方" }
-      it { is_expected.to eq :usage }
-    end
-    describe "タスクヘルプ" do
-      let(:text) { "タスクヘルプ" }
-      it { is_expected.to eq :usage }
-    end
-    describe "タスク？" do
-      let(:text) { "タスク？" }
-      it { is_expected.to eq :usage }
-    end
-    describe "help" do
-      let(:text) { "help" }
-      it { is_expected.to eq :usage }
-    end
-    describe "version" do
-      let(:text) { "version" }
-      it { is_expected.to eq :version }
+
+    list = [
+      Msg.new("ふつうのメッセージ", 'be nil'),
+      Msg.new("タスク", "eq :all"),
+      Msg.new("タスクをテステス", "be_nil"),
+      Msg.new("タスク追加　ぴよぴよ", "eq :add"),
+      Msg.new("タスク完了　ぴよ", "eq :done"),
+      Msg.new("タスク使い方", "eq :usage"),
+      Msg.new("タスクヘルプ", "eq :usage"),
+      Msg.new("タスク？", "eq :usage"),
+      Msg.new("help", "eq :usage"),
+      Msg.new("version", "eq :version"),
+      Msg.new("タスク終わり　1", "eq :done"),
+    ]
+
+    list.each do |msg|
+      class_eval <<-"RUBY"
+        describe '#{msg.text}' do
+          let(:text) { '#{msg.text}' }
+          it { is_expected.to #{msg.expected} }
+        end
+      RUBY
     end
   end
 
