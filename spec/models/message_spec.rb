@@ -5,29 +5,25 @@ RSpec.describe Message, type: :model do
   Msg = Struct.new(:text, :expected)
 
   describe "detect message" do
-    subject { Message.detect!(text) }
 
     list = [
-      Msg.new("ふつうのメッセージ", 'be nil'),
-      Msg.new("タスク", "eq :all"),
-      Msg.new("タスクをテステス", "be_nil"),
-      Msg.new("タスク追加　ぴよぴよ", "eq :add"),
-      Msg.new("タスク完了　ぴよ", "eq :done"),
-      Msg.new("タスク使い方", "eq :usage"),
-      Msg.new("タスクヘルプ", "eq :usage"),
-      Msg.new("タスク？", "eq :usage"),
-      Msg.new("help", "eq :usage"),
-      Msg.new("version", "eq :version"),
-      Msg.new("タスク終わり　1", "eq :done"),
+      Msg.new("ふつうのメッセージ", nil),
+      Msg.new("タスク", :all),
+      Msg.new("タスクをテステス", nil),
+      Msg.new("タスク追加　ぴよぴよ", :add),
+      Msg.new("タスク完了　ぴよ", :done),
+      Msg.new("タスク使い方", :usage),
+      Msg.new("タスクヘルプ", :usage),
+      Msg.new("タスク？", :usage),
+      Msg.new("help", :usage),
+      Msg.new("version", :version),
+      Msg.new("タスク終わり　1", :done),
     ]
 
     list.each do |msg|
-      class_eval <<-"RUBY"
-        describe '#{msg.text}' do
-          let(:text) { '#{msg.text}' }
-          it { is_expected.to #{msg.expected} }
-        end
-      RUBY
+      it "'#{msg.text}' -> 期待通りのシンボルが返ってくること" do
+        expect(Message.detect!(msg.text)).to eq msg.expected
+      end
     end
   end
 
